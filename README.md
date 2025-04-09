@@ -1,6 +1,6 @@
 ### Startup Intros
 
-#Introduction
+# Introduction
 
 This is the beginning of the Startup Intros data sourcing project. Currently, it allows for a news source (such as an RSS feed) to be fed into it. Then it pulls all posts from any RSS feed available.
 
