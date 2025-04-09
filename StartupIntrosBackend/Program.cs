@@ -13,7 +13,7 @@ public static class Program
   {
     var dbService = DbService.CreateAsync();
 
-    Console.WriteLine("=== StartupIntrosBackend Console App ===");
+    Console.WriteLine("\n\n=== StartupIntrosBackend Console App ===");
     Console.WriteLine("Database has been updated.");
 
     // Run the interactive menu loop.
