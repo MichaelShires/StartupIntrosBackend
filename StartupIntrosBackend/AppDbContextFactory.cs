@@ -7,16 +7,8 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
   public AppDbContext CreateDbContext(string[] args)
   {
-    // Set the DataDirectory to the current working directory
-    var dataDirectory = Directory.GetCurrentDirectory();
-    AppDomain.CurrentDomain.SetData("DataDirectory", dataDirectory);
-
     var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-
-    // Construct your SQLite connection string; adjust the file path as needed.
-    string connectionString = $"Data Source=|DataDirectory|MyDatabase.db";
-    optionsBuilder.UseSqlite(connectionString);
-
+    optionsBuilder.UseSqlite("Data Source=MyDatabase.db");
     return new AppDbContext(optionsBuilder.Options);
   }
 }

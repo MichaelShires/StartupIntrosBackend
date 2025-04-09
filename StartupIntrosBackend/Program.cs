@@ -1,41 +1,42 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace StartupIntrosBackend;
 
 public class Program
 {
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
-    // Set DataDirectory to the current directory (or another desired path)
-    AppDomain.CurrentDomain.SetData("DataDirectory", Directory.GetCurrentDirectory());
-
     var options = new DbContextOptionsBuilder<AppDbContext>()
-      .UseSqlite("Data Source=|DataDirectory|MyDatabase.db")
+      .UseSqlite("Data Source=MyDatabase.db")
       .Options;
 
-    // Ensure the folder exists
-    var dataFolder = Path.Combine(Directory.GetCurrentDirectory(), "sqldata");
-    if (!Directory.Exists(dataFolder))
-    {
-      Directory.CreateDirectory(dataFolder);
-    }
+    await using var context = new AppDbContext(options);
+    await context.Database.MigrateAsync();
 
-    using (var context = new AppDbContext(options))
-    {
-      // Apply any pending migrations. This will create the database if it doesn't exist.
-      context.Database.Migrate();
+    context.NewsSources.Add(new NewsSource{Url = "https://techcrunch.com/feed/"});
+    await context.SaveChangesAsync();
+      
+    await ProcessRssFeeds(context);
+  }
 
-      // Example: add a new source entry
-      context.NewsSources.Add(new NewsSource() { Url = "https://example.com/feed" });
-      context.SaveChanges();
-
-      // Retrieve and display sources
-      foreach (var source in context.NewsSources)
-      {
-        Console.WriteLine($"Source ID: {source.Id}, URL: {source.Url}");
-      }
-    }
+  private static async Task ProcessRssFeeds(AppDbContext context)
+  {
+    // Retrieve all news sources from the database asynchronously
+    var sources = await context.NewsSources.ToListAsync();
     
-    Console.WriteLine("Current Directory (Environment.CurrentDirectory): " + Environment.CurrentDirectory);
+    foreach (var source in sources)
+    {
+      // Call the ReadRss method from RssReader which returns a list of posts for the given news source
+      var posts = await RssReader.ReadRss(source);
+          
+      // Add all posts to the Posts table
+      context.Posts.AddRange(posts);
+          
+      // Save changes to the database
+      await context.SaveChangesAsync();
+      
+      Console.WriteLine($"Processed {posts.Count} posts for source {source.Url}");
+    }
   }
 }

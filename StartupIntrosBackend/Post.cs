@@ -1,29 +1,39 @@
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 
 namespace StartupIntrosBackend;
 
 public class Post
 {
-  private readonly string _title;
-  private readonly string _content;
-  private readonly DateTime _date;
-  private readonly string _author;
+    public int Id { get; set; } // primary key
+    public string Title { get; set; }
+    public string Content { get; set; }
+    public DateTime Date { get; set; }
+    public int AuthorId { get; set; }
+    public NewsSource Author { get; set; }
 
-  public Post(string title, string content, DateTime date, string author)
-  {
-    this._title = title;
-    this._content = content;
-    this._date = date;
-    this._author = author;
-  }
+    // Parameterless constructor for EF Core
+    public Post()
+    {
+    }
 
-  public string Serialize()
-  {
-    StringBuilder sb = new StringBuilder();
-    sb.Append($"title: {_title}\n");
-    sb.Append($"content: {_content}\n");
-    sb.Append($"date: {_date}\n");
-    sb.Append($"author: {_author}\n");
-    return sb.ToString();
-  }
+    // Parameterized constructor for convenience
+    public Post(string title, string content, DateTime date, NewsSource author)
+    {
+        Title = title;
+        Content = content;
+        Date = date;
+        Author = author;
+        AuthorId = author.Id;
+    }
+
+    public string Serialize()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"title: {Title}\n");
+        sb.Append($"content: {Content}\n");
+        sb.Append($"date: {Date}\n");
+        sb.Append($"author: {Author}\n");
+        return sb.ToString();
+    }
 }
