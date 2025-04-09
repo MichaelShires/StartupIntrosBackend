@@ -7,8 +7,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
   public AppDbContext CreateDbContext(string[] args)
   {
-    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-    optionsBuilder.UseSqlite("Data Source=MyDatabase.db");
-    return new AppDbContext(optionsBuilder.Options);
+    var options = AppDbContext.CreateDbOptions();
+    return new AppDbContext(options);
   }
 }
