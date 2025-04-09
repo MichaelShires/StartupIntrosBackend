@@ -9,20 +9,15 @@ public class NewsService
   // This method routes to the appropriate retrieval function based on the source subtype.
   public async Task<List<Post>> GetPostsForNewsSourceAsync(NewsSource source)
   {
-    if (source is RssFeed rss) return await GetPostsForRssFeedAsync(rss);
-    else if (source is TwitterUser twitter) return await GetPostsForTwitterAsync(twitter);
-    else if (source is BlogPostSource blog) return await GetPostsForBlogPostSourceAsync(blog);
-    else throw new NotSupportedException($"NewsSource of type {source.GetType().Name} is not supported.");
+    return source switch
+    {
+      RssFeed rss => await GetPostsForRssFeedAsync(rss),
+      TwitterUser twitter => await GetPostsForTwitterAsync(twitter),
+      BlogPostSource blog => await GetPostsForBlogPostSourceAsync(blog),
+      _ => throw new NotSupportedException($"NewsSource of type {source.GetType().Name} is not supported.")
+    };
   }
-
-  public async Task<List<Post>> GetChannelPostsAsync(AppDbContext context, string channelName)
-  {
-    var techCrunchPosts = await context.Posts
-      .Where(p => p.NewsSource.Name == channelName)
-      .ToListAsync();
-
-    return techCrunchPosts;
-  }
+  
   
   private async Task<List<Post>> GetPostsForRssFeedAsync(RssFeed rss)
   {

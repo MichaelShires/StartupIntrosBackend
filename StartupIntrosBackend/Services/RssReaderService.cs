@@ -4,7 +4,7 @@ using StartupIntrosBackend.Models;
 
 namespace StartupIntrosBackend.Services;
 
-public class RssReaderService
+public static class RssReaderService
 {
     // Asynchronous entry point for pulling the RSS feed
     public static async Task<List<Post>> ReadRss(RssFeed source)

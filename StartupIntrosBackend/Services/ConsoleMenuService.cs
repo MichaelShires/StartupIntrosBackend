@@ -21,11 +21,11 @@ namespace StartupIntrosBackend.Services
 
     public async Task RunMenuAsync()
     {
-      bool exit = false;
+      var exit = false;
       while (!exit)
       {
-        Spectre.Console.AnsiConsole.Clear();
-        Spectre.Console.AnsiConsole.MarkupLine("[bold blue]=== Startup Intros Backend Console App ===[/]");
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[bold blue]=== Startup Intros Backend Console App ===[/]");
         var option = AnsiConsole.Prompt(
           new SelectionPrompt<string>()
             .Title("[green]Select an option:[/]")
@@ -48,10 +48,10 @@ namespace StartupIntrosBackend.Services
             exit = true;
             break;
           default:
-            Spectre.Console.AnsiConsole.MarkupLine("[red]Invalid option. Please try again.[/]");
+            AnsiConsole.MarkupLine("[red]Invalid option. Please try again.[/]");
             break;
         }
-        Spectre.Console.AnsiConsole.WriteLine("\n Press any key to continue . . .");
+        AnsiConsole.WriteLine("\n Press any key to continue . . .");
         Console.ReadKey(true);
       }
     }
