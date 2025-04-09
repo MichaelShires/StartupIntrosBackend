@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using Spectre.Console;
 using StartupIntrosBackend.Data;
 
 namespace StartupIntrosBackend.Services
@@ -23,32 +24,35 @@ namespace StartupIntrosBackend.Services
       bool exit = false;
       while (!exit)
       {
-        Console.WriteLine();
-        Console.WriteLine("Select an option:");
-        Console.WriteLine("1: Add News Source");
-        Console.WriteLine("2: Process All News Feeds");
-        Console.WriteLine("3: Exit");
-        Console.Write("Enter your choice: ");
-
-        var choice = Console.ReadLine();
-        Console.WriteLine();
-
-        switch (choice)
+        Spectre.Console.AnsiConsole.Clear();
+        Spectre.Console.AnsiConsole.MarkupLine("[bold blue]=== Startup Intros Backend Console App ===[/]");
+        var option = AnsiConsole.Prompt(
+          new SelectionPrompt<string>()
+            .Title("[green]Select an option:[/]")
+            .PageSize(10)
+            .AddChoices(new[] {
+              "Add News Source",
+              "Process all News Sources",
+              "Exit"
+            }));
+        switch (option)
         {
-          case "1":
+          case "Add News Source":
             await _newsSourceService.AddNewsSourceInteractiveAsync();
             break;
-          case "2":
+          case "Process all News Sources":
             await _dbService.ProcessAllNewsFeedsAsync();
-            Console.WriteLine("Processed all news feeds successfully.");
+            Spectre.Console.AnsiConsole.MarkupLine("[green]Processed all news feeds successfully.[/]");
             break;
-          case "3":
+          case "Exit":
             exit = true;
             break;
           default:
-            Console.WriteLine("Invalid choice. Please try again.");
+            Spectre.Console.AnsiConsole.MarkupLine("[red]Invalid option. Please try again.[/]");
             break;
         }
+        Spectre.Console.AnsiConsole.WriteLine("\n Press any key to continue . . .");
+        Console.ReadKey(true);
       }
     }
   }
