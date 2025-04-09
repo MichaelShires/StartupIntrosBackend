@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StartupIntrosBackend.NewsSourceLib;
 
 namespace StartupIntrosBackend;
 
@@ -9,10 +10,13 @@ public class Program
     var options = AppDbContext.CreateDbOptions();
     await using var context = new AppDbContext(options);
     await context.Database.MigrateAsync();
-
-    //context.NewsSources.Add(new NewsSource{Url = "https://techcrunch.com/feed/"});
-    //await context.SaveChangesAsync();
+    
+    await context.Posts.ExecuteDeleteAsync();
+    await context.NewsSources.ExecuteDeleteAsync();
+    RssFeed rssFeed = new RssFeed("techCrunch", "https://techcrunch.com/feed/");
+    context.NewsSources.Add(rssFeed);
+    await context.SaveChangesAsync();
       
-    //await ContentManager.ProcessRssFeeds(context);
+    await ContentManager.ProcessAllNewsFeeds(context);
   }
 }

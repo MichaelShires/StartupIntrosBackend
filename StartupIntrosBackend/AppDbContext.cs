@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StartupIntrosBackend.NewsSourceLib;
 
 namespace StartupIntrosBackend;
 
@@ -12,11 +13,25 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     base.OnModelCreating(modelBuilder);
 
     modelBuilder.Entity<NewsSource>()
+      .HasDiscriminator<string>("SourceType")
+      .HasValue<RssFeed>("RSS")
+      .HasValue<TwitterUser>("Twitter")
+      .HasValue<BlogPostSource>("Blog");
+    
+    modelBuilder.Entity<RssFeed>()
+      .HasIndex(n => n.Url)
+      .IsUnique();
+    
+    modelBuilder.Entity<TwitterUser>()
+      .HasIndex(n => n.Handle)
+      .IsUnique();
+    
+    modelBuilder.Entity<BlogPostSource>()
       .HasIndex(n => n.Url)
       .IsUnique();
     
     modelBuilder.Entity<Post>()
-      .HasOne(p => p.Author)
+      .HasOne(p => p.NewsSource)
       .WithMany(ns => ns.Posts)  // Assuming you add a collection navigation property in NewsSource
       .HasForeignKey(p => p.AuthorId)
       .IsRequired();  // or .IsRequired(false) if you want it to be optional

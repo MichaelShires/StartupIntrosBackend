@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using StartupIntrosBackend.NewsSourceLib;
 
 namespace StartupIntrosBackend;
 
@@ -10,7 +11,7 @@ public class Post
     public string Content { get; set; }
     public DateTime Date { get; set; }
     public int AuthorId { get; set; }
-    public NewsSource Author { get; set; }
+    public NewsSource NewsSource { get; set; }
 
     // Parameterless constructor for EF Core
     public Post()
@@ -18,13 +19,13 @@ public class Post
     }
 
     // Parameterized constructor for convenience
-    public Post(string title, string content, DateTime date, NewsSource author)
+    public Post(string title, string content, DateTime date, NewsSource newsSource)
     {
         Title = title;
         Content = content;
         Date = date;
-        Author = author;
-        AuthorId = author.Id;
+        NewsSource = newsSource;
+        AuthorId = newsSource.Id;
     }
 
     public string Serialize()
@@ -33,7 +34,7 @@ public class Post
         sb.Append($"title: {Title}\n");
         sb.Append($"content: {Content}\n");
         sb.Append($"date: {Date}\n");
-        sb.Append($"author: {Author}\n");
+        sb.Append($"author: {NewsSource}\n");
         return sb.ToString();
     }
 }
