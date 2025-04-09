@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace StartupIntrosBackend.NewsSourceLib;
+namespace StartupIntrosBackend.Models;
 
 public abstract class NewsSource
 {
@@ -10,7 +10,7 @@ public abstract class NewsSource
   public ICollection<Post> Posts { get; set; } = new List<Post>();
   
   // Protected constructor to ensure Name is set
-  protected NewsSource(string name)
+  protected NewsSource(string? name)
   {
     Name = name;
   }

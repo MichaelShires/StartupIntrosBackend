@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using StartupIntrosBackend.NewsSourceLib;
+using StartupIntrosBackend.Models;
 
-namespace StartupIntrosBackend;
+namespace StartupIntrosBackend.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
@@ -32,7 +32,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     
     modelBuilder.Entity<Post>()
       .HasOne(p => p.NewsSource)
-      .WithMany(ns => ns.Posts)  // Assuming you add a collection navigation property in NewsSource
+      .WithMany(ns => ns.Posts)
       .HasForeignKey(p => p.AuthorId)
       .IsRequired();  // or .IsRequired(false) if you want it to be optional
   }

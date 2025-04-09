@@ -1,8 +1,6 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
-using StartupIntrosBackend.NewsSourceLib;
 
-namespace StartupIntrosBackend;
+namespace StartupIntrosBackend.Models;
 
 public class Post
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace StartupIntrosBackend.NewsSourceLib;
+namespace StartupIntrosBackend.Models;
 
 public class TwitterUser : NewsSource
 {

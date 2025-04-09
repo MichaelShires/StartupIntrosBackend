@@ -1,10 +1,10 @@
 using System.ServiceModel.Syndication;
 using System.Xml;
-using StartupIntrosBackend.NewsSourceLib;
+using StartupIntrosBackend.Models;
 
-namespace StartupIntrosBackend;
+namespace StartupIntrosBackend.Services;
 
-public class RssReader
+public class RssReaderService
 {
     // Asynchronous entry point for pulling the RSS feed
     public static async Task<List<Post>> ReadRss(RssFeed source)

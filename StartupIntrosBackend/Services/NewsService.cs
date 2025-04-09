@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using StartupIntrosBackend.NewsSourceLib;
+using Microsoft.EntityFrameworkCore;
+using StartupIntrosBackend.Data;
+using StartupIntrosBackend.Models;
 
-namespace StartupIntrosBackend;
+namespace StartupIntrosBackend.Services;
 
 public class NewsService
 {
@@ -16,10 +15,19 @@ public class NewsService
     else throw new NotSupportedException($"NewsSource of type {source.GetType().Name} is not supported.");
   }
 
+  public async Task<List<Post>> GetChannelPostsAsync(AppDbContext context, string channelName)
+  {
+    var techCrunchPosts = await context.Posts
+      .Where(p => p.NewsSource.Name == channelName)
+      .ToListAsync();
+
+    return techCrunchPosts;
+  }
+  
   private async Task<List<Post>> GetPostsForRssFeedAsync(RssFeed rss)
   {
     // Your existing RSS reader returns a list of posts.
-    return await RssReader.ReadRss(rss);
+    return await RssReaderService.ReadRss(rss);
   }
 
   private async Task<List<Post>> GetPostsForTwitterAsync(TwitterUser twitter)
